@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.11 [15d04m20y/l2.10]
+ * jQuery tds.tailori plugin v-2.12 [13d05m20y/l2.11]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -113,7 +113,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.11 [15d04m20y/l2.10] (Path)");
+			console.info("Textronic jquery.tds.js v-2.12 [13d05m20y/l2.11] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1873,8 +1873,8 @@
 			{
 				selectedMonogram.push({
 					'MonogramText' : this._MonogramText.toString(),
-					'MonogramPlacement' : this._MonogramFont.toString(),
-					'MonogramFont' : this._MonogramPlacement.toString(),
+					'MonogramPlacement' : this._MonogramPlacement.toString(),
+					'MonogramFont' : this._MonogramFont.toString(),
 					'MonogramColor' : this._MonogramColor.toString()
 				});
 				monogram = true;
