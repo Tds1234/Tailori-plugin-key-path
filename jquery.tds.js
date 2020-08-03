@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.12 [13d05m20y/l2.11]
+ * jQuery tds.tailori plugin v-2.13 [03d08m20y/l2.12]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -43,6 +43,7 @@
 		_CurrentContrastNo: "",
 		_CurrentOption : "",
 		_MonogramPlacement: "",
+		_MonogramPlacementName: "",
 		_MonogramColor: "",
 		_MonogramFont: "",
 		_MonogramText: "",
@@ -50,6 +51,7 @@
 		_MonogramColorHex: "",
 		_MonogramFontName: "",
 		_MonogramAlignment : "FACE",
+		_IsMonoBlock : false,
 		_MPlacement : new Array(),
 		_MFont : new Array(),
 		_MColor : new Array(),
@@ -113,7 +115,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.12 [13d05m20y/l2.11] (Path)");
+			console.info("Textronic jquery.tds.js v-2.13 [03d08m20y/l2.12] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -236,6 +238,7 @@
 						$(that.Option('MonogramPlace')).html(htmlOutput);
 
 						that._MonogramPlacement = $('[data-tds-mplace]:eq(0)').attr("data-tds-mplace");
+						that._MonogramPlacementName = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name;
 						that._MonogramFont = $('[data-tds-mfont]:eq(0)').attr("data-tds-mfont");
 						that._MonogramColor = $('[data-tds-mcolor]:eq(0)').attr("data-tds-mcolor");
 						that._MonogramCordinates = $('[data-tds-mcord]:eq(0)').attr("data-tds-mcord");
@@ -248,6 +251,7 @@
 						$("body").on("click", "[data-tds-mplace]", function () {
 							that._MonogramPlacement = $(this).data("tds-mplace");
 							that._MonogramCordinates = $(this).data("tds-mcord");
+							that._MonogramPlacementName = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name;
 							
 							if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "none" ||
 							that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "no monogram"){
@@ -717,6 +721,9 @@
 					for (var blockedDetail in this._BlockedDetails[oldValue]) {
 						var detail = this._BlockedDetails[oldValue][blockedDetail];
 						this._CurrentBlockedDetails.pop(detail);
+						if(that._ProductData.filter(function(d){if(d.Id === detail) return d})[0].Name.toLowerCase().indexOf(this._MonogramPlacementName.toLowerCase()) > -1){
+							this._IsMonoBlock = false;
+						}
 						$("[data-tds-key='" + detail + "']").removeClass("block");
 					}
 				}
@@ -806,8 +813,12 @@
 				if (this._BlockedDetails.hasOwnProperty(value)) {
 					for (var blockedDetail=0; blockedDetail < this._BlockedDetails[value].length;blockedDetail++) {
 						var detail = this._BlockedDetails[value][blockedDetail];
-						if(this._CurrentBlockedDetails.indexOf(detail) === -1)
+						if(this._CurrentBlockedDetails.indexOf(detail) === -1){
 							this._CurrentBlockedDetails.push(detail);
+							if(that._ProductData.filter(function(d){if(d.Id === detail) return d})[0].Name.toLowerCase().indexOf(this._MonogramPlacementName.toLowerCase()) > -1){
+								this._IsMonoBlock = true;
+							}
+						}	
 						$("[data-tds-key='" + detail + "']").addClass("block");
 					}
 				}
@@ -1070,7 +1081,7 @@
 					Urls[alignmentIndex][this._RenderObject[key].OrderNo].Normal.push(NormalImage);
 				
 				}	
-				if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "") {
+				if (this._MonogramText !== "" && this._MonogramFont !== "" && this._MonogramColor !== "" && this._MonogramPlacement !== "" && !this._IsMonoBlock) {
 					//monoUrl = "mp=" + this._MonogramPlacement + "&mf=" + this._MonogramFont + "&mc=" + this._MonogramColor + "&mt=" + this._MonogramText + "/"
 					var monoUrl = this._MonogramText + "," + this._MonogramColorHex + "," + this._MonogramFontName + ",{[" + this._MonogramCordinates + "]}";
 					//abc,#FF0000,Embassy,{[1580,1840,904,580,15,-3]}
@@ -1869,7 +1880,7 @@
 
 			var monogram = false;
 
-			if(this._MonogramPlacement != "" && this._MonogramColor != "" && this._MonogramFont != "" && this._MonogramText != "")
+			if(this._MonogramPlacement != "" && this._MonogramColor != "" && this._MonogramFont != "" && this._MonogramText != "" && !this._IsMonoBlock)
 			{
 				selectedMonogram.push({
 					'MonogramText' : this._MonogramText.toString(),
