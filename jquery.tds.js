@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.13 [03d08m20y/l2.12]
+ * jQuery tds.tailori plugin v-2.14 [04d08m20y/l2.13]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -79,6 +79,7 @@
 		_CDNPath: "",
 		_worker: null,
 		_AlignmentsUrl: [],
+		_CombineUrls : [],
 
 		defaults: {
 			Product: "Men-Shirt",
@@ -1096,8 +1097,11 @@
 				if(this._Alignments[alignmentIndex].IsModelImage){
 						/*$(imgSrc).append("<img class='TdsNew' style='opacity:0' src='" + BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") +scale+"' style='position:absolute'>");*/
 						//Urls[alignmentIndex].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
-						Urls[alignmentIndex][this._RenderObject[key].OrderNo].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
+						Urls[alignmentIndex][0] = {"Normal":[],"SingleLink":[],"DoubleLink":[],"Contrast":[],"ModelImage":""};
+						Urls[alignmentIndex][0].ModelImage = BaseUrl1 + "/ModelImage/"+ this._ModelId + BaseUrl2.substring(0,BaseUrl2.length - 1) + "." + this.Option("ImageFormat") + scale;
 				}
+				
+				this._CombineUrls[alignmentIndex] = this._drapingUrl(this._RenderObject,true,true,this._Alignments[alignmentIndex].Name).replace("imgs","img");
 			}
 				
 				//console.log(Urls);
@@ -1181,7 +1185,7 @@
 					
 					var callback = that.Option("OnRenderImageChange");
 					if (typeof callback == 'function')
-						callback.call(that, that._AlignmentsUrl);
+						callback.call(that, that._AlignmentsUrl,that._CombineUrls);
 					
 					var arr = [];
 					$(imgSrc + ' .TdsNew').each(function(){
@@ -1226,7 +1230,7 @@
 				}
 			},t);
 		},
-		_drapingUrl: function (RenderObject,IsBlocking,onlycall) {
+		_drapingUrl: function (RenderObject,IsBlocking,onlycall,view) {
 			//this._loader();
 			this._Url = "";
 
@@ -1368,15 +1372,18 @@
 					
 			if (this._IsAlignmentClick) {
 				
-				
 				this._Url += "view=" + this._Alignments[this._CurrentAlignmentIndex].Name;
+					
 				this._SelectedAlignment = this._Alignments[this._CurrentAlignmentIndex].Name;
 
 				if (!this._IsSpecific)
 					this._IsAlignmentClick = false;
 			} else {
 				
-				this._Url += "view=" + this._SelectedAlignment;
+				if(view !== undefined)
+					this._Url += "view=" + view;
+				else	
+					this._Url += "view=" + this._SelectedAlignment;
 					/*for(var index in this._Alignments)
 					if(this._Alignments[index]==this._SelectedAlignment)
 						this._CurrentAlignmentIndex = index;*/
@@ -1527,7 +1534,14 @@
 		},
 		_combineImage: function (urls) {
 			
-			if(typeof(Worker) !== "undefined"){
+			var combineurl = this._drapingUrl(this._RenderObject,true,true);
+			$(".TdsNew").last().attr("data-zoom-image",combineurl);
+			
+			var callback = that.Option("OnCombineImageLoad");
+			if (typeof callback == 'function')
+				callback.call(that, dataurl);
+			
+			/*if(typeof(Worker) !== "undefined"){
 				this._worker = new Worker(this.Option("CombineJsPath"));
 			
 				var canvas = document.getElementById("Tds-canvas");
@@ -1581,7 +1595,7 @@
 				this._worker.postMessage(urls);
 			}else{
 				console.warn("Worker not support.")
-			}
+			}*/
 			
 		},
 		_linkingBlocking: function () {
