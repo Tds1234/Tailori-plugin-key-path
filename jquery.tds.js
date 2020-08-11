@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.14 [04d08m20y/l2.13]
+ * jQuery tds.tailori plugin v-2.15 [11d08m20y/l2.14]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -116,7 +116,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.13 [03d08m20y/l2.12] (Path)");
+			console.info("Textronic jquery.tds.js v-2.15 [11d08m20y/l2.14] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -1534,12 +1534,12 @@
 		},
 		_combineImage: function (urls) {
 			
-			var combineurl = this._drapingUrl(this._RenderObject,true,true);
+			var combineurl = this._drapingUrl(this._RenderObject,true,true).replace("imgs","img");
 			$(".TdsNew").last().attr("data-zoom-image",combineurl);
 			
-			var callback = that.Option("OnCombineImageLoad");
+			var callback = this.Option("OnCombineImageLoad");
 			if (typeof callback == 'function')
-				callback.call(that, dataurl);
+				callback.call(this, combineurl);
 			
 			/*if(typeof(Worker) !== "undefined"){
 				this._worker = new Worker(this.Option("CombineJsPath"));
