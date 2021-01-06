@@ -1,5 +1,5 @@
 /*
- * jQuery tds.tailori plugin v-2.15 [11d08m20y/l2.14]
+ * jQuery tds.tailori plugin v-2.16 [06d01m21y/l2.15]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
  * Further Changes, comments:
  * Licensed under the Textronics Design System pvt.ltd.
@@ -116,7 +116,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.15 [11d08m20y/l2.14] (Path)");
+			console.info("Textronic jquery.tds.js v-2.16 [06d01m21y/l2.15] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -894,7 +894,8 @@
 			var BaseUrl = this._CachePath;
 			
 			if(BaseUrl.toLowerCase().indexOf("cloudinary") > -1){
-				BaseUrl += "/w_500/v1";
+				BaseUrl += "/c_scale,q_auto:best,w_800/v1";
+				// BaseUrl += "/w_500/v1";
 				scale = "";
 			}
 				
@@ -1485,7 +1486,7 @@
 							this._SpecificImageSource = true;
 						
 						if (this.Option("AutoSpecific"))
-							this._IsSpecific = true;
+							//this._IsSpecific = true; // sanket
 						
 						if(this._SpecificRender)
 							this._SpecificRender = false;
@@ -1992,6 +1993,9 @@
 					'Data': btoa(JSON.stringify(lookData)),
 					'Url' : url
 				};
+			}
+			else if(rawRenderData.length == 0){
+				return console.error("Look data not found.");
 			}
 			else if(rawRenderData.toLowerCase() === "image"){
 				return $(".TdsNew").last().attr("data-zoom-image");
