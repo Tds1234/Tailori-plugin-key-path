@@ -116,7 +116,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.16 [06d01m21y/l2.15] (Path)");
+			console.info("Textronic jquery.tds.js v-2.17 [06d05m21y/l2.16] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -2110,6 +2110,37 @@
 							}
 				
 			return null;
+		},
+		
+		Details: function(data) {
+			var details = [];
+			console.log(data)
+			if (data == undefined){
+				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
+					var dList = [this._ProductData[dataIndex]].map(function(element){
+					    var data = {
+					        DataAttr: element.DataAttr,
+					        Id: element.Id,
+					        ImageSource: element.ImageSource,
+					        IsAddOn: element.IsAddOn,
+					        IsBlock: element.IsBlock,
+					        Name: element.Name					        
+					    }					    
+					    return data;
+					});
+					details[this._ProductData[dataIndex].Id] = dList[0];
+				}
+			}else if (data.toLowerCase() == 'all') {
+				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
+					console.log(this._ProductData[dataIndex]);
+					details[this._ProductData[dataIndex].Id] = this._ProductData[dataIndex];
+				}
+			} else {
+				console.error('invalid parameter in get details');
+				details = 'invalid parameter';
+			}
+			
+			return details;
 		},
 
 		Options: function (productId) {
