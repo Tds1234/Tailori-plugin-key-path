@@ -1,7 +1,7 @@
 /*
- * jQuery tds.tailori plugin v-2.16 [06d01m21y/l2.15]
+ * jQuery tds.tailori plugin v-2.18 [07d05m21y/l2.17]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
- * Further Changes, comments:
+ * Further Changes, comments: Sanket Shinde
  * Licensed under the Textronics Design System pvt.ltd.
  */
 ;
@@ -116,7 +116,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.17 [06d05m21y/l2.16] (Path)");
+			console.info("Textronic jquery.tds.js v-2.18 [07d05m21y/l2.17] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -148,8 +148,8 @@
 		
 		_setCofiguration: function (type) {
 			var templateId = this.Option("ProductTemplate");
-			if (templateId == "")
-				return;
+			// if (templateId == "")
+			// 	return;
 
 			$.ajax({
 				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +".json/json-file",
@@ -187,11 +187,13 @@
 							}
 						});
 
-						var template = $.templates(templateId);
-						var htmlOutput = template.render({
-								"Product": that._ProductData
-							});
-						this.$element.html(htmlOutput);
+						if (templateId != "") {
+							var template = $.templates(templateId);
+							var htmlOutput = template.render({
+									"Product": that._ProductData
+								});
+							this.$element.html(htmlOutput);
+						}
 
 						var addOnUiId = that.Option("AddOnOptionsPlace");
 						var template2 = $.templates(addOnTemplateId);
@@ -208,11 +210,13 @@
 						}
 
 					}else{
-						var template = $.templates(templateId);
-						var htmlOutput = template.render({
-								"Product": that._ProductData
-							});
-						this.$element.html(htmlOutput);
+						if (templateId != "") {
+							var template = $.templates(templateId);
+							var htmlOutput = template.render({
+									"Product": that._ProductData
+								});
+							this.$element.html(htmlOutput);
+						}
 					}
 
 					/* End */
@@ -2111,10 +2115,9 @@
 				
 			return null;
 		},
-		
+
 		Details: function(data) {
 			var details = [];
-			console.log(data)
 			if (data == undefined){
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
 					var dList = [this._ProductData[dataIndex]].map(function(element){
@@ -2132,14 +2135,12 @@
 				}
 			}else if (data.toLowerCase() == 'all') {
 				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
-					console.log(this._ProductData[dataIndex]);
 					details[this._ProductData[dataIndex].Id] = this._ProductData[dataIndex];
 				}
 			} else {
 				console.error('invalid parameter in get details');
 				details = 'invalid parameter';
-			}
-			
+			}			
 			return details;
 		},
 
