@@ -1,7 +1,7 @@
 /*
- * jQuery tds.tailori plugin v-2.16 [06d01m21y/l2.15]
+ * jQuery tds.tailori plugin v-2.19 [26d05m21y/l2.18]
  * Original Author:  @ Sagar Narayane & Rohit Ghadigaonkar
- * Further Changes, comments:
+ * Further Changes, comments: Sanket Shinde
  * Licensed under the Textronics Design System pvt.ltd.
  */
 ;
@@ -116,7 +116,7 @@
 		},
 
 		init: function () {
-			console.info("Textronic jquery.tds.js v-2.16 [06d01m21y/l2.15] (Path)");
+			console.info("Textronic jquery.tds.js v-2.18 [07d05m21y/l2.17] (Path)");
 			this.config = $.extend({}, this.defaults, this.options, this.metadata);
 			this._Swatch = this.Option("Swatch");
 			//this._setCofiguration(this.Option("Product"));
@@ -148,8 +148,8 @@
 		
 		_setCofiguration: function (type) {
 			var templateId = this.Option("ProductTemplate");
-			if (templateId == "")
-				return;
+			// if (templateId == "")
+			// 	return;
 
 			$.ajax({
 				url: this._CDNPath + "/files/v1/"+ this._ClientName +"/ConfiguartionCache/" + type.trim().replace(/\s+/g, '_') +".json/json-file",
@@ -187,11 +187,13 @@
 							}
 						});
 
-						var template = $.templates(templateId);
-						var htmlOutput = template.render({
-								"Product": that._ProductData
-							});
-						this.$element.html(htmlOutput);
+						if (templateId != "") {
+							var template = $.templates(templateId);
+							var htmlOutput = template.render({
+									"Product": that._ProductData
+								});
+							this.$element.html(htmlOutput);
+						}
 
 						var addOnUiId = that.Option("AddOnOptionsPlace");
 						var template2 = $.templates(addOnTemplateId);
@@ -208,11 +210,13 @@
 						}
 
 					}else{
-						var template = $.templates(templateId);
-						var htmlOutput = template.render({
-								"Product": that._ProductData
-							});
-						this.$element.html(htmlOutput);
+						if (templateId != "") {
+							var template = $.templates(templateId);
+							var htmlOutput = template.render({
+									"Product": that._ProductData
+								});
+							this.$element.html(htmlOutput);
+						}
 					}
 
 					/* End */
@@ -238,6 +242,7 @@
 						var htmlOutput = template.render(data);
 						$(that.Option('MonogramPlace')).html(htmlOutput);
 
+
 						that._MonogramPlacement = $('[data-tds-mplace]:eq(0)').attr("data-tds-mplace");
 						that._MonogramPlacementName = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name;
 						that._MonogramFont = $('[data-tds-mfont]:eq(0)').attr("data-tds-mfont");
@@ -248,106 +253,106 @@
 						
 						if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
 							that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
-
-						$("body").on("click", "[data-tds-mplace]", function () {
-							that._MonogramPlacement = $(this).data("tds-mplace");
-							that._MonogramCordinates = $(this).data("tds-mcord");
-							that._MonogramPlacementName = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name;
-							
-							if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "none" ||
-							that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "no monogram"){
-								that._MonogramPlacement = "";
-								that._MonogramFont = "";
-								that._MonogramColor = "" ;
-								that._MonogramText = "";
-								that._MonogramCordinates = "";
-								that._MonogramFontName = "";
-								that._MonogramColorHex = "";
-								that._createUrl(that._RenderObject,true);
-							}else{
-								
-								if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
-									that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
-		
-							
-								if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "" 
-								&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
-								{
-									that._IsSpecific = false;
-									that._SelectedAlignment = that._MonogramAlignment;
-									//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-									that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
-									that._createUrl(that._RenderObject,true);
-									
-									var callback = that.Option("OnMonogramChange");
-									if (typeof callback == 'function')
-										callback.call(this, $(this).data("tds-option"));
-								}
-							}
-							
-							
-						});
-
-						$("body").on("click", "[data-tds-mfont]", function () {
-
-							that._MonogramFont = $(this).data("tds-mfont");
-							that._MonogramFontName = $(this).data("tds-mfontn");
-							
-							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
-							&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
-							{
-								that._IsSpecific = false;
-								that._SelectedAlignment = that._MonogramAlignment;
-								//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
-								that._createUrl(that._RenderObject,true);
-								
-								var callback = that.Option("OnMonogramChange");
-								if (typeof callback == 'function')
-									callback.call(this, $(this).data("tds-option"));
-							}
-
-						});
-
-						$("body").on("click", "[data-tds-mcolor]", function () {
-
-							that._MonogramColor = $(this).data("tds-mcolor");
-							that._MonogramColorHex = $(this).data("tds-mcolorhex");
-
-							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
-							&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
-							{
-								that._IsSpecific = false;
-								that._SelectedAlignment = that._MonogramAlignment;
-								//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
-								that._createUrl(that._RenderObject,true);
-								
-								var callback = that.Option("OnMonogramChange");
-								if (typeof callback == 'function')
-									callback.call(this, $(this).data("tds-option"));
-							}
-						});
-
-						$("body").on("change", '[data-tds-moption="text"]', function () {
-							that._MonogramText = $(this).val();
-
-							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
-							&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
-							{
-								that._IsSpecific = false;
-								that._SelectedAlignment = that._MonogramAlignment;
-								//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
-								that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
-								that._createUrl(that._RenderObject,true);
-								
-								var callback = that.Option("OnMonogramChange");
-								if (typeof callback == 'function')
-									callback.call(this, $(this).data("tds-option"));
-							}
-
-						});
 					}
+
+					$("body").on("click", "[data-tds-mplace]", function () {
+						that._MonogramPlacement = $(this).data("tds-mplace");
+						that._MonogramCordinates = $(this).data("tds-mcord");
+						that._MonogramPlacementName = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name;
+						
+						if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "none" ||
+						that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Name.toLowerCase() == "no monogram"){
+							that._MonogramPlacement = "";
+							that._MonogramFont = "";
+							that._MonogramColor = "" ;
+							that._MonogramText = "";
+							that._MonogramCordinates = "";
+							that._MonogramFontName = "";
+							that._MonogramColorHex = "";
+							that._createUrl(that._RenderObject,true);
+						}else{
+							
+							if(that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment != undefined)
+								that._MonogramAlignment = that._MPlacement.filter(function(x){ if(x.Id === that._MonogramPlacement) return x;})[0].Alignment;
+	
+						
+							if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== "" 
+							&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
+							{
+								that._IsSpecific = false;
+								that._SelectedAlignment = that._MonogramAlignment;
+								//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
+								that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
+								that._createUrl(that._RenderObject,true);
+								
+								var callback = that.Option("OnMonogramChange");
+								if (typeof callback == 'function')
+									callback.call(this, $(this).data("tds-option"));
+							}
+						}
+						
+						
+					});
+
+					$("body").on("click", "[data-tds-mfont]", function () {
+
+						that._MonogramFont = $(this).data("tds-mfont");
+						that._MonogramFontName = $(this).data("tds-mfontn");
+						
+						if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
+						&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
+						{
+							that._IsSpecific = false;
+							that._SelectedAlignment = that._MonogramAlignment;
+							//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
+							that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
+							that._createUrl(that._RenderObject,true);
+							
+							var callback = that.Option("OnMonogramChange");
+							if (typeof callback == 'function')
+								callback.call(this, $(this).data("tds-option"));
+						}
+
+					});
+
+					$("body").on("click", "[data-tds-mcolor]", function () {
+
+						that._MonogramColor = $(this).data("tds-mcolor");
+						that._MonogramColorHex = $(this).data("tds-mcolorhex");
+
+						if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
+						&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
+						{
+							that._IsSpecific = false;
+							that._SelectedAlignment = that._MonogramAlignment;
+							//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
+							that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
+							that._createUrl(that._RenderObject,true);
+							
+							var callback = that.Option("OnMonogramChange");
+							if (typeof callback == 'function')
+								callback.call(this, $(this).data("tds-option"));
+						}
+					});
+
+					$("body").on("change", '[data-tds-moption="text"]', function () {
+						that._MonogramText = $(this).val();
+
+						if (that._MonogramPlacement !== "" && that._MonogramFont !== "" && that._MonogramColor !== "" && that._MonogramText !== ""
+						&& that._MonogramCordinates != "" && that._MonogramFontName !== "" && that._MonogramColorHex !== "")
+						{
+							that._IsSpecific = false;
+							that._SelectedAlignment = that._MonogramAlignment;
+							//that._CurrentAlignmentIndex = $.inArray( that._SelectedAlignment , that._Alignments);
+							that._CurrentAlignmentIndex = getIndexByValue(that._Alignments,that._SelectedAlignment);
+							that._createUrl(that._RenderObject,true);
+							
+							var callback = that.Option("OnMonogramChange");
+							if (typeof callback == 'function')
+								callback.call(this, $(this).data("tds-option"));
+						}
+
+					});
 
 					$("body").on("click", "[data-tds-element]", function (e) {
 						//e.stopPropagation();
@@ -2110,6 +2115,34 @@
 							}
 				
 			return null;
+		},
+		
+		Details: function(data) {
+			var details = [];
+			if (data == undefined){
+				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
+					var dList = [this._ProductData[dataIndex]].map(function(element){
+					    var data = {
+					        DataAttr: element.DataAttr,
+					        Id: element.Id,
+					        ImageSource: element.ImageSource,
+					        IsAddOn: element.IsAddOn,
+					        IsBlock: element.IsBlock,
+					        Name: element.Name					        
+					    }					    
+					    return data;
+					});
+					details[this._ProductData[dataIndex].Id] = dList[0];
+				}
+			}else if (data.toLowerCase() == 'all') {
+				for (var dataIndex = 0; dataIndex < this._ProductData.length; dataIndex++){
+					details[this._ProductData[dataIndex].Id] = this._ProductData[dataIndex];
+				}
+			} else {
+				console.error('invalid parameter in get details');
+				details = 'invalid parameter';
+			}			
+			return details;
 		},
 
 		Options: function (productId) {
